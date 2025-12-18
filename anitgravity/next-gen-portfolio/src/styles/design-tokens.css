@@ -1,0 +1,66 @@
+/* Design Tokens - Premium & Scalable */
+:root {
+  /* Colors - HSL for easy manipulation */
+  --hue-primary: 250; /* Deep Purple */
+  --hue-secondary: 190; /* Cyan */
+  --hue-accent: 320; /* Hot Pink */
+
+  /* Main Colors */
+  --color-primary: hsl(var(--hue-primary), 70%, 55%);
+  --color-primary-glow: hsla(var(--hue-primary), 70%, 55%, 0.2);
+  
+  --color-secondary: hsl(var(--hue-secondary), 80%, 40%); /* Darker for better contrast on light */
+  
+  --color-accent: hsl(var(--hue-accent), 80%, 50%);
+  
+  /* Backgrounds - Light Mode */
+  --color-bg-deep: hsl(240, 20%, 97%); /* Very light cool gray */
+  --color-bg-surface: hsl(0, 0%, 100%); /* Pure white */
+  --color-bg-glass: hsla(0, 0%, 100%, 0.7); /* Frosted glass white */
+  
+  --bg-hover: hsla(var(--hue-primary), 50%, 50%, 0.05);
+
+  /* Text - Light Mode */
+  --color-text-main: hsl(240, 20%, 10%); /* Almost black */
+  --color-text-muted: hsl(240, 10%, 45%); /* Dark gray */
+  
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  --space-xl: 8rem;
+
+  /* Typography */
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Animation */
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid hsla(0, 0%, 100%, 0.6);
+  box-shadow: 0 4px 20px 0 hsla(240, 20%, 80%, 0.5); /* Soft, light shadow */
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary), var(--color-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% 200%;
+  animation: gradient-move 8s ease infinite;
+}
+
+@keyframes gradient-move {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

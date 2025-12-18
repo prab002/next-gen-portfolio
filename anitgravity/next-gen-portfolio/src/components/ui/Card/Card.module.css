@@ -1,0 +1,13 @@
+.card {
+  padding: var(--space-md);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease;
+}
+
+.hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px hsla(var(--hue-primary), 50%, 10%, 0.5);
+  border-color: hsla(var(--hue-primary), 70%, 50%, 0.3);
+}
