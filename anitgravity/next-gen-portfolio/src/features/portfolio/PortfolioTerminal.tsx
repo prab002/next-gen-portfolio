@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Project } from './types';
 import { PROJECTS } from './projects.data';
 import { ProjectTerminal } from './ProjectTerminal';
+import { AsciiBanner } from './AsciiBanner';
 import styles from './PortfolioTerminal.module.css';
 
 interface CommandOutput {
@@ -177,15 +178,7 @@ export const PortfolioTerminal = () => {
             </div>
           </div>
   
-          <pre className={styles.asciiArt}>
-  {`
-   ____   ____      _    ____  
-  |  _ \\ |  _ \\    / \\  | __ ) 
-  | |_) || |_) |  / _ \\ |  _ \\ 
-  |  __/ |  _ <  / ___ \\| |_) |
-  |_|    |_| \\_\\/_/   \\_\\____/ 
-  `}
-          </pre>
+          <AsciiBanner />
           <div className={styles.missionHeader}>
             <span className={styles.missionIcon}>⦿</span>
             <span>Objective: Explore Digital Frontier</span>
