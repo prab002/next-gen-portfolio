@@ -78,19 +78,28 @@ export const PortfolioTerminal = () => {
       response = (
         <div className={styles.projectGrid}>
           {PROJECTS.map(p => (
-            <div key={p.id} className={styles.projectItem}>
-              <div className={styles.projectHeader}>
-                <span className={styles.projectTitle}>{p.title}</span>
-                <span className={styles.projectSlug}>{p.slug}</span>
+            <div key={p.id} className={styles.dashboardCard}>
+              <div className={styles.cardHeader}>
+                <div className={styles.cardTitle}>{p.title}</div>
+                <div className={styles.cardValue}>{p.tags[0] || 'Web App'}</div>
               </div>
-              <p className={styles.projectDesc}>{p.description}</p>
-              <div className={styles.tags}>
-                {p.tags.map(t => <span key={t} className={styles.tag}>{t}</span>)}
+              <p style={{ color: '#888', fontSize: '0.9rem', flex: 1 }}>{p.description}</p>
+              
+              <div className={styles.cardFooter}>
+                <div className={styles.cardIcon}>⚡</div>
+                <div 
+                  className={styles.cardAction}
+                  onClick={() => {
+                    handleCommand(`open ${p.slug}`);
+                  }}
+                >
+                  View Project ➜
+                </div>
               </div>
             </div>
           ))}
-          <div className={styles.response} style={{ marginTop: '1rem', color: 'var(--color-text-muted)' }}>
-            Type <span className={styles.highlight}>open &lt;slug&gt;</span> to view details (e.g., 'open neon-commerce')
+          <div className={styles.response} style={{ marginTop: '1rem', color: 'var(--color-text-muted)', gridColumn: '1/-1' }}>
+            Type <span className={styles.highlight}>open &lt;slug&gt;</span> or click 'View Project'
           </div>
         </div>
       );
@@ -139,6 +148,16 @@ export const PortfolioTerminal = () => {
   return (
     <div className={styles.terminalContainer} onClick={focusInput}>
       <div className={styles.welcomeMessage}>
+        {/* Navigation Bar */}
+        <div className={styles.dashboardHeader}>
+          <div className={styles.navPills}>
+            <span className={`${styles.navPill} ${styles.active}`}>Portfolio</span>
+            <span className={styles.navPill}>Launches</span>
+            <span className={styles.navPill}>Products</span>
+            <span className={styles.navPill}>Company</span>
+          </div>
+        </div>
+
         <pre className={styles.asciiArt}>
 {`
  ____   ____      _    ____  
