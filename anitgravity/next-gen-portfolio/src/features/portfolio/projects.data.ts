@@ -1,8 +1,13 @@
 import { Project } from './types';
 
+// Add slug to the Project type if it's not already there, 
+// for now we'll just extend the data and assume type update is coming or we cast it.
+// Actually, let's update types.ts first in the next step, but here we can just add the property.
+
 export const PROJECTS: Project[] = [
   {
     id: '1',
+    slug: 'neon-commerce',
     title: 'Neon Commerce',
     description: 'A futuristic e-commerce platform built with Next.js 14 and WebGL product visualizations.',
     tags: ['Next.js', 'WebGL', 'Three.js', 'Stripe'],
@@ -16,6 +21,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: '2',
+    slug: 'ai-architect',
     title: 'AI Architect',
     description: 'Generative design tool for architects using Stable Diffusion and ControlNet.',
     tags: ['Python', 'React', 'FastAPI', 'AI'],
@@ -27,6 +33,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: '3',
+    slug: 'cyber-dashboard',
     title: 'Cyber Dashboard',
     description: 'Real-time analytics dashboard with glassmorphism UI and websocket updates.',
     tags: ['Vue 3', 'D3.js', 'Socket.io'],
@@ -35,6 +42,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: '4',
+    slug: 'quantum-finance',
     title: 'Quantum Finance',
     description: 'DeFi protocol aggregator with zero-knowledge proof identity verification.',
     tags: ['Solidity', 'Web3.js', 'Rust'],

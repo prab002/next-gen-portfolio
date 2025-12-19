@@ -3,6 +3,7 @@ import { Project } from './types';
 import { Card } from '@/components/ui/Card/Card';
 import { Button } from '@/components/ui/Button/Button';
 import styles from './ProjectCard.module.css';
+import Link from 'next/link';
 
 export const ProjectCard = ({ project }: { project: Project }) => {
   return (
@@ -12,7 +13,9 @@ export const ProjectCard = ({ project }: { project: Project }) => {
         style={{ background: project.imageUrl }}
       >
         <div className={styles.overlay}>
-          <Button size="sm" variant="secondary" className={styles.viewBtn}>View Project</Button>
+          <Link href={`/portfolio/${project.id}`}>
+            <Button size="sm" variant="secondary" className={styles.viewBtn}>View Project</Button>
+          </Link>
         </div>
       </div>
       
