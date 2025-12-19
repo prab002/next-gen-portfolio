@@ -216,29 +216,36 @@
 
   .navPills {
     display: flex;
-    gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.03);
-    padding: 0.5rem;
-    border-radius: 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 0.25rem;
+    background: #111;
+    padding: 0.35rem;
+    border-radius: 3rem;
+    border: 1px solid #333;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   }
 
   .navPill {
-    padding: 0.5rem 1.5rem;
-    border-radius: 1.5rem;
-    color: var(--color-text-muted);
-    font-size: 0.9rem;
+    padding: 0.6rem 1.8rem;
+    border-radius: 2rem;
+    color: #888;
+    font-size: 0.95rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
   }
 
   .navPill.active {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: #ccff00; /* Neon Lime */
+    color: #000;
+    font-weight: 700;
+    box-shadow: 0 0 15px rgba(204, 255, 0, 0.4);
   }
 
-  .navPill:hover {
+  .navPill:not(.active):hover {
     color: #fff;
+    background: rgba(255, 255, 255, 0.05);
   }
 
   /* Dashboard Cards */
@@ -306,7 +313,113 @@
     justify-content: center;
     font-size: 1.2rem;
   }
+  /* Tactical Status Bar */
+  .tacticalStatusBar {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.4);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    z-index: 10;
+  }
 
+  .statusGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: 2rem;
+  }
+
+  .statusLabel {
+    color: #666;
+  }
+
+  .statusValue {
+    color: #d4d4d4;
+    font-weight: bold;
+  }
+
+  .statusDot {
+    width: 8px;
+    height: 8px;
+    background-color: #ff9f0a; /* Warning Orange */
+    border-radius: 50%;
+    box-shadow: 0 0 5px #ff9f0a;
+  }
+
+  .alert {
+    color: #ff453a; /* Critical Red */
+    text-shadow: 0 0 5px rgba(255, 69, 58, 0.5);
+  }
+
+  .terminalContainerInner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    padding: 2rem;
+  }
+
+  /* Retro Grid Background */
+  .terminalContainerInner::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  /* Log Header */
+  .activityLogTitle {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .logIcon {
+    color: #ffd60a;
+  }
+
+  .missionHeader {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.01);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.5rem;
+    align-items: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    color: #e5e5e5;
+  }
+
+  .missionIcon {
+    font-size: 1.2rem;
+  }
+
+  .missionAgent {
+    color: #888;
+  }
   @keyframes pulse {
     0% { opacity: 0.5; }
     50% { opacity: 1; }

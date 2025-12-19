@@ -147,40 +147,67 @@ export const PortfolioTerminal = () => {
 
   return (
     <div className={styles.terminalContainer} onClick={focusInput}>
-      <div className={styles.welcomeMessage}>
-        {/* Navigation Bar */}
-        <div className={styles.dashboardHeader}>
-          <div className={styles.navPills}>
-            <span className={`${styles.navPill} ${styles.active}`}>Portfolio</span>
-            <span className={styles.navPill}>Launches</span>
-            <span className={styles.navPill}>Products</span>
-            <span className={styles.navPill}>Company</span>
-          </div>
+      <div className={styles.tacticalStatusBar}>
+        <div className={styles.statusGroup}>
+          <span className={styles.statusLabel}>REF:</span>
+          <span className={styles.statusValue}>PRAB-PF-V2</span>
         </div>
-
-        <pre className={styles.asciiArt}>
-{`
- ____   ____      _    ____  
-|  _ \\ |  _ \\    / \\  | __ ) 
-| |_) || |_) |  / _ \\ |  _ \\ 
-|  __/ |  _ <  / ___ \\| |_) |
-|_|    |_| \\_\\/_/   \\_\\____/ 
-`}
-        </pre>
-        <p>Welcome to Prab's Interactive Portfolio v2.0</p>
-        <div className={styles.helpHint}>
-          <p>Available Commands:</p>
-          <ul>
-            <li><span className={styles.highlight}>ls</span> - List projects</li>
-            <li><span className={styles.highlight}>open &lt;name&gt;</span> - View project details</li>
-            <li><span className={styles.highlight}>ai</span> - Ask AI assistant</li>
-            <li><span className={styles.highlight}>whoami</span> - About me</li>
-            <li><span className={styles.highlight}>help</span> - Show full help menu</li>
-          </ul>
+        <div className={styles.statusGroup}>
+          <span className={styles.statusDot} />
+          <span className={styles.statusValue}>SYSTEM ONLINE</span>
+        </div>
+        <div className={styles.statusGroup}>
+          <span className={styles.statusLabel}>SEC:</span>
+          <span className={`${styles.statusValue} ${styles.alert}`}>HIGH</span>
+        </div>
+        <div className={styles.statusGroup} style={{ marginLeft: 'auto' }}>
+          <span className={styles.statusValue}>{new Date().toISOString().split('T')[0]}</span>
         </div>
       </div>
 
+      <div className={styles.terminalContainerInner}>
+        <div className={styles.welcomeMessage}>
+          {/* Navigation Bar */}
+          <div className={styles.dashboardHeader}>
+            <div className={styles.navPills}>
+              <span className={`${styles.navPill} ${styles.active}`}>Portfolio</span>
+              <span className={styles.navPill}>Launches</span>
+              <span className={styles.navPill}>Products</span>
+              <span className={styles.navPill}>Company</span>
+            </div>
+          </div>
+  
+          <pre className={styles.asciiArt}>
+  {`
+   ____   ____      _    ____  
+  |  _ \\ |  _ \\    / \\  | __ ) 
+  | |_) || |_) |  / _ \\ |  _ \\ 
+  |  __/ |  _ <  / ___ \\| |_) |
+  |_|    |_| \\_\\/_/   \\_\\____/ 
+  `}
+          </pre>
+          <div className={styles.missionHeader}>
+            <span className={styles.missionIcon}>⦿</span>
+            <span>Objective: Explore Digital Frontier</span>
+            <span className={styles.missionAgent}>Agent: Visitor(Lead)</span>
+          </div>
+  
+          <div className={styles.helpHint}>
+            <p>Available Protocols:</p>
+            <ul>
+              <li><span className={styles.highlight}>ls</span> - List projects</li>
+              <li><span className={styles.highlight}>open &lt;name&gt;</span> - View project details</li>
+              <li><span className={styles.highlight}>ai</span> - Ask AI assistant</li>
+              <li><span className={styles.highlight}>whoami</span> - About me</li>
+              <li><span className={styles.highlight}>help</span> - Show full help menu</li>
+            </ul>
+          </div>
+        </div>
+
       <div className={styles.outputArea}>
+        <div className={styles.activityLogTitle}>
+           <span className={styles.logIcon}>⚡</span> Activity Log
+        </div>
         {history.map((entry, i) => (
           <div key={i}>
             <div className={styles.commandLine}>
@@ -208,6 +235,7 @@ export const PortfolioTerminal = () => {
         </div>
         <div ref={bottomRef} />
       </div>
+    </div>
     </div>
   );
 };
