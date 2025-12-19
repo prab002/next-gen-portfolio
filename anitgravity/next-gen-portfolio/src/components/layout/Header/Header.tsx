@@ -11,7 +11,7 @@ export const Header = () => {
           IO<span className="text-gradient">.DEV</span>
         </Link>
         <nav className={styles.nav}>
-          <Link href="#portfolio" className={styles.link}>Portfolio</Link>
+          <Link href="/portfolio" className={styles.link}>Portfolio</Link>
           <Link href="#ai-lab" className={styles.link}>AI Lab</Link>
           <Link href="#about" className={styles.link}>About</Link>
         </nav>

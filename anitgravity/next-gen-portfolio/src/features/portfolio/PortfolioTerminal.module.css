@@ -1,6 +1,6 @@
 .terminalContainer {
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
     background: #0a0a0a;
     color: var(--color-text-main);
     font-family: 'Courier New', Courier, monospace;
@@ -8,6 +8,7 @@
     flex-direction: column;
     padding: 2rem;
     box-sizing: border-box;
+    overflow: hidden; /* Prevent body scroll from this container */
   }
   
   .outputArea {
@@ -15,6 +16,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    overflow-y: auto; /* Enable scroll for content */
+    padding-right: 0.5rem; /* Space for scrollbar */
+    padding-bottom: 1rem;
   }
   
   .welcomeMessage {
@@ -56,12 +60,17 @@
   .input {
     background: transparent;
     border: none;
-    color: var(--color-text-main);
+    color: #00ff00; /* Bright terminal green */
     font-family: inherit;
     font-size: 1rem;
     flex: 1;
     outline: none;
-    caret-color: var(--color-primary);
+    caret-color: #00ff00;
+  }
+
+  .input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-style: italic;
   }
   
   .projectGrid {
@@ -179,3 +188,25 @@
     margin-bottom: 0.25rem;
     color: var(--color-text-muted);
   }
+
+  .aiResponse {
+    color: #4facfe;
+    background: rgba(79, 172, 254, 0.1);
+    padding: 1rem;
+    border-radius: 4px;
+    border-left: 2px solid #4facfe;
+    margin-top: 0.5rem;
+  }
+
+  .aiThinking {
+    color: var(--color-text-muted);
+    font-style: italic;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
+

@@ -11,6 +11,39 @@ interface CommandOutput {
   output: React.ReactNode;
 }
 
+const AIResponse = ({ query }: { query: string }) => {
+  const [loading, setLoading] = useState(true);
+  const [answer, setAnswer] = useState('');
+
+  useEffect(() => {
+    // Simulate AI thinking time
+    const timer = setTimeout(() => {
+      setLoading(false);
+      // Mock AI Logic
+      const q = query.toLowerCase();
+      if (q.includes('skill') || q.includes('tech')) {
+        setAnswer("Based on my analysis of the projects, the user is proficient in: Next.js, React, TypeScript, WebGL/Three.js, Python, and Solidity.");
+      } else if (q.includes('contact') || q.includes('email') || q.includes('touch')) {
+        setAnswer("You can reach the author via encrypted channel at: contact@prab.dev (simulated).");
+      } else if (q.includes('about') || q.includes('who')) {
+        setAnswer("Prab is a creative developer focused on high-performance web applications and interactive 3D experiences.");
+      } else {
+        setAnswer(`Processing query: "${query}"... \nAnalysis complete. This is a simulated AI response. Try asking about 'skills', 'contact', or 'about'.`);
+      }
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  if (loading) return <div className={styles.aiThinking}>AI is processing...</div>;
+  
+  return (
+    <div className={styles.aiResponse}>
+      <strong>AI Assistant:</strong>
+      <p style={{ marginTop: '0.5rem' }}>{answer}</p>
+    </div>
+  );
+};
+
 export const PortfolioTerminal = () => {
   const [history, setHistory] = useState<CommandOutput[]>([]);
   const [input, setInput] = useState('');
@@ -19,9 +52,9 @@ export const PortfolioTerminal = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const HELP_TEXT = `
-  Available commands:
   - ls              : List all projects
   - open <project>  : Open a specific project by slug or ID
+  - ai <query>      : Ask AI Assistant (e.g., 'ai skills', 'ai background')
   - help            : Show this help message
   - clear           : Clear terminal history
   - whoami          : Display current user
@@ -80,6 +113,13 @@ export const PortfolioTerminal = () => {
       return;
     } else if (cleanCmdLower === 'whoami') {
       response = <div className={styles.response}>visitor@portfolio</div>;
+    } else if (cleanCmdLower === 'ai' || cleanCmdLower.startsWith('ai ')) {
+       const query = cleanCmdLower.startsWith('ai ') ? cleanCmdLower.replace('ai ', '').trim() : '';
+       if (query) {
+         response = <AIResponse query={query} />;
+       } else {
+         response = <span className={styles.response}>Please provide a query, e.g., <span className={styles.highlight}>'ai skills'</span> or <span className={styles.highlight}>'ai contact'</span>.</span>;
+       }
     } else {
       response = <span className={styles.error}>Command not found: {cleanCmd}. Type 'help' for instructions.</span>;
     }
@@ -114,6 +154,7 @@ export const PortfolioTerminal = () => {
           <ul>
             <li><span className={styles.highlight}>ls</span> - List projects</li>
             <li><span className={styles.highlight}>open &lt;name&gt;</span> - View project details</li>
+            <li><span className={styles.highlight}>ai</span> - Ask AI assistant</li>
             <li><span className={styles.highlight}>whoami</span> - About me</li>
             <li><span className={styles.highlight}>help</span> - Show full help menu</li>
           </ul>
@@ -130,23 +171,24 @@ export const PortfolioTerminal = () => {
             <div>{entry.output}</div>
           </div>
         ))}
+        
+        <div className={styles.inputLine}>
+          <span className={styles.prompt}>visitor@portfolio:~$</span>
+          <input
+            ref={inputRef}
+            type="text"
+            className={styles.input}
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleCommand(input)}
+            autoFocus
+            autoComplete="off"
+            spellCheck="false"
+            placeholder="Type 'help', 'ls' or ask 'ai'..."
+          />
+        </div>
+        <div ref={bottomRef} />
       </div>
-
-      <div className={styles.inputLine}>
-        <span className={styles.prompt}>visitor@portfolio:~$</span>
-        <input
-          ref={inputRef}
-          type="text"
-          className={styles.input}
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleCommand(input)}
-          autoFocus
-          autoComplete="off"
-          spellCheck="false"
-        />
-      </div>
-      <div ref={bottomRef} />
     </div>
   );
 };
