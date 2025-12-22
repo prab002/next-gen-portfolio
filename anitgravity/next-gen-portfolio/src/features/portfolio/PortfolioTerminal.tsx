@@ -5,6 +5,7 @@ import { Project } from './types';
 import { PROJECTS } from './projects.data';
 import { ProjectTerminal } from './ProjectTerminal';
 import { AsciiBanner } from './AsciiBanner';
+import { WhoAmI } from './WhoAmI';
 import styles from './PortfolioTerminal.module.css';
 
 interface CommandOutput {
@@ -45,10 +46,13 @@ const AIResponse = ({ query }: { query: string }) => {
   );
 };
 
+type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs';
+
 export const PortfolioTerminal = () => {
   const [history, setHistory] = useState<CommandOutput[]>([]);
   const [input, setInput] = useState('');
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [currentView, setCurrentView] = useState<ViewMode>('portfolio');
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -122,7 +126,9 @@ export const PortfolioTerminal = () => {
       setInput('');
       return;
     } else if (cleanCmdLower === 'whoami') {
-      response = <div className={styles.response}>visitor@portfolio</div>;
+      setCurrentView('whoami');
+      response = <div className={styles.response}>Initializing WhoAmI Protocol...</div>;
+      // Optionally just switch the view instead of printing to terminal, or both.
     } else if (cleanCmdLower === 'ai' || cleanCmdLower.startsWith('ai ')) {
        const query = cleanCmdLower.startsWith('ai ') ? cleanCmdLower.replace('ai ', '').trim() : '';
        if (query) {
@@ -140,6 +146,41 @@ export const PortfolioTerminal = () => {
 
   const focusInput = () => {
     inputRef.current?.focus();
+  };
+
+  const renderContent = () => {
+    switch (currentView) {
+      case 'portfolio':
+        return (
+          <>
+            <AsciiBanner />
+            <div className={styles.missionHeader}>
+              <span className={styles.missionIcon}>⦿</span>
+              <span>Objective: Explore Digital Frontier</span>
+              <span className={styles.missionAgent}>Agent: Visitor(Lead)</span>
+            </div>
+    
+            <div className={styles.helpHint}>
+              <p>Available Protocols:</p>
+              <ul>
+                <li><span className={styles.highlight}>ls</span> - List projects</li>
+                <li><span className={styles.highlight}>open &lt;name&gt;</span> - View project details</li>
+                <li><span className={styles.highlight}>ai</span> - Ask AI assistant</li>
+                <li><span className={styles.highlight}>whoami</span> - About me</li>
+                <li><span className={styles.highlight}>help</span> - Show full help menu</li>
+              </ul>
+            </div>
+          </>
+        );
+      case 'whoami':
+        return <WhoAmI />;
+      case 'updates':
+        return <div className={styles.response}>System Updates: No new patches available at this time. Check back later.</div>;
+      case 'blogs':
+        return <div className={styles.response}>Accessing Blog Network... No signals found. (Coming Soon)</div>;
+      default:
+        return null;
+    }
   };
 
   if (activeProject) {
@@ -171,30 +212,34 @@ export const PortfolioTerminal = () => {
           {/* Navigation Bar */}
           <div className={styles.dashboardHeader}>
             <div className={styles.navPills}>
-              <span className={`${styles.navPill} ${styles.active}`}>Portfolio</span>
-              <span className={styles.navPill}>Launches</span>
-              <span className={styles.navPill}>Products</span>
-              <span className={styles.navPill}>Company</span>
+              <span 
+                className={`${styles.navPill} ${currentView === 'portfolio' ? styles.active : ''}`}
+                onClick={() => setCurrentView('portfolio')}
+              >
+                portfolio
+              </span>
+              <span 
+                className={`${styles.navPill} ${currentView === 'whoami' ? styles.active : ''}`}
+                onClick={() => setCurrentView('whoami')}
+              >
+                whoami
+              </span>
+              <span 
+                className={`${styles.navPill} ${currentView === 'updates' ? styles.active : ''}`}
+                onClick={() => setCurrentView('updates')}
+              >
+                updates
+              </span>
+              <span 
+                className={`${styles.navPill} ${currentView === 'blogs' ? styles.active : ''}`}
+                onClick={() => setCurrentView('blogs')}
+              >
+                Blogs
+              </span>
             </div>
           </div>
   
-          <AsciiBanner />
-          <div className={styles.missionHeader}>
-            <span className={styles.missionIcon}>⦿</span>
-            <span>Objective: Explore Digital Frontier</span>
-            <span className={styles.missionAgent}>Agent: Visitor(Lead)</span>
-          </div>
-  
-          <div className={styles.helpHint}>
-            <p>Available Protocols:</p>
-            <ul>
-              <li><span className={styles.highlight}>ls</span> - List projects</li>
-              <li><span className={styles.highlight}>open &lt;name&gt;</span> - View project details</li>
-              <li><span className={styles.highlight}>ai</span> - Ask AI assistant</li>
-              <li><span className={styles.highlight}>whoami</span> - About me</li>
-              <li><span className={styles.highlight}>help</span> - Show full help menu</li>
-            </ul>
-          </div>
+          {renderContent()}
         </div>
 
       <div className={styles.outputArea}>

@@ -430,3 +430,68 @@
     100% { opacity: 0.5; }
   }
 
+
+/* WhoAmI Section */
+.whoAmIContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.01);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.botContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.asciiBot {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  color: #00ff00; /* Robot Green */
+  white-space: pre;
+  line-height: 1.2;
+  font-size: 1rem;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+.infoContainer {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.infoLine {
+  font-size: 1rem;
+  color: #d4d4d4;
+  line-height: 1.5;
+}
+
+.infoLabel {
+  color: var(--color-primary);
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1em;
+  background-color: var(--color-primary);
+  animation: blink 1s step-end infinite;
+  vertical-align: bottom;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
