@@ -13,6 +13,7 @@ import { StructureVisualizer } from './StructureVisualizer';
 import { GameLauncher } from './GameLauncher';
 import { BlogSection } from './BlogSection';
 import { QueueSystem } from './QueueSystem';
+import { TradeLogger } from './TradeLogger';
 import { getContributionGraph, getLatestActivity, getMockGraph } from './services/github';
 // ... styles ...
 
@@ -56,7 +57,7 @@ const AIResponse = ({ query }: { query: string }) => {
   );
 };
 
-type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs' | 'kanban' | 'tree' | 'game' | 'queue';
+type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs' | 'kanban' | 'tree' | 'game' | 'queue' | 'tradel';
 
 export const PortfolioTerminal = () => {
   const [history, setHistory] = useState<CommandOutput[]>([]);
@@ -94,6 +95,8 @@ export const PortfolioTerminal = () => {
   - kanban          : Open Project Management Board
   - tree            : Launch Folder Structure Generator
   - game            : Enter Arcade Mode
+  - queue           : Launch Cyber-Triage Queue System
+  - tradel          : Launch Trade Logger & Analytics
   - ai <query>      : Ask AI Assistant (e.g., 'ai skills', 'ai background')
   - help            : Show this help message
   - clear           : Clear terminal history
@@ -126,6 +129,9 @@ export const PortfolioTerminal = () => {
     } else if (cleanCmdLower === 'queue') {
        setCurrentView('queue');
        response = <div className={styles.response}>Launching Cyber-Triage System...</div>;
+    } else if (cleanCmdLower === 'tradel') {
+       setCurrentView('tradel');
+       response = <div className={styles.response}>Initializing Financial Ledger...</div>;
     } else if (cleanCmdLower === 'ls') {
       response = (
         <div className={styles.projectGrid}>
@@ -328,6 +334,8 @@ export const PortfolioTerminal = () => {
         return <BlogSection />;
       case 'queue':
         return <QueueSystem />;
+      case 'tradel':
+         return <TradeLogger />;
       default:
         return null;
     }
@@ -387,6 +395,12 @@ export const PortfolioTerminal = () => {
                 onClick={() => setCurrentView('queue')}
               >
                 Queue
+              </span>
+              <span 
+                className={`${styles.navPill} ${currentView === 'tradel' ? styles.active : ''}`}
+                onClick={() => setCurrentView('tradel')}
+              >
+                Tradel
               </span>
             </div>
           </div>
