@@ -7,6 +7,8 @@ import { ProjectTerminal } from './ProjectTerminal';
 import { AsciiBanner } from './AsciiBanner';
 import { WhoAmI } from './WhoAmI';
 import { PreviewSidebar } from './PreviewSidebar';
+import { ReactorCore } from './ReactorCore';
+import { getMockContributions } from './services/github';
 import styles from './PortfolioTerminal.module.css';
 
 interface CommandOutput {
@@ -253,7 +255,15 @@ export const PortfolioTerminal = () => {
       case 'whoami':
         return <WhoAmI onSkillSelect={handleSkillSelect} />;
       case 'updates':
-        return <div className={styles.response}>System Updates: No new patches available at this time. Check back later.</div>;
+        return (
+            <div className={styles.response}>
+                <div style={{ marginBottom: '1rem', color: 'var(--color-text-muted)' }}>SYSTEM: CONNECTED TO GITHUB_NET</div>
+                <ReactorCore data={getMockContributions()} />
+                <div style={{ marginTop: '2rem', color: '#666', fontStyle: 'italic' }}>
+                   Latest Patch: v2.1.0 - Neural Link & OpsCenter Online.
+                </div>
+            </div>
+        );
       case 'blogs':
         return <div className={styles.response}>Accessing Blog Network... No signals found. (Coming Soon)</div>;
       default:

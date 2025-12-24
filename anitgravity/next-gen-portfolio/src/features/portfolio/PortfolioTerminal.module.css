@@ -524,6 +524,87 @@
   box-shadow: -10px 0 30px rgba(0,0,0,0.5);
 }
 
+/* OpsCenter - Reactor Core */
+.reactorContainer {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(57, 211, 83, 0.2);
+  background: rgba(0, 20, 0, 0.3);
+  border-radius: 4px;
+}
+
+.reactorHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  font-family: 'Courier New', monospace;
+  align-items: center;
+}
+
+.reactorTitle {
+  color: #39d353;
+  font-weight: bold;
+  letter-spacing: 2px;
+  font-size: 0.9rem;
+}
+
+.reactorStatus {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.fuelRodContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 120px;
+  gap: 4px;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dotted rgba(255, 255, 255, 0.1);
+}
+
+.fuelRodWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  cursor: help;
+}
+
+.fuelRod {
+  width: 100%;
+  min-width: 6px;
+  border-radius: 2px;
+  transition: height 0.5s ease-out;
+  box-shadow: 0 0 10px rgba(57, 211, 83, 0.1);
+  animation: rodPulse 3s infinite ease-in-out;
+}
+
+.fuelDate {
+  font-size: 0.55rem;
+  color: #666;
+  margin-top: 0.5rem;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  white-space: nowrap;
+}
+
+.reactorFooter {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: #444;
+  margin-top: 1rem;
+}
+
+@keyframes rodPulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; box-shadow: 0 0 15px rgba(57, 211, 83, 0.3); }
+}
+
 .previewSidebar.open {
   transform: translateX(0);
 }
