@@ -10,6 +10,7 @@ import { PreviewSidebar } from './PreviewSidebar';
 import { ReactorCore } from './ReactorCore';
 import { KanbanBoard } from './KanbanBoard';
 import { StructureVisualizer } from './StructureVisualizer';
+import { GameLauncher } from './GameLauncher';
 import { getMockContributions } from './services/github';
 import styles from './PortfolioTerminal.module.css';
 
@@ -51,7 +52,7 @@ const AIResponse = ({ query }: { query: string }) => {
   );
 };
 
-type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs' | 'kanban' | 'tree';
+type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs' | 'kanban' | 'tree' | 'game';
 
 export const PortfolioTerminal = () => {
   const [history, setHistory] = useState<CommandOutput[]>([]);
@@ -69,6 +70,7 @@ export const PortfolioTerminal = () => {
   - open <project>  : Open a specific project by slug or ID
   - kanban          : Open Project Management Board
   - tree            : Launch Folder Structure Generator
+  - game            : Enter Arcade Mode
   - ai <query>      : Ask AI Assistant (e.g., 'ai skills', 'ai background')
   - help            : Show this help message
   - clear           : Clear terminal history
@@ -95,6 +97,9 @@ export const PortfolioTerminal = () => {
     } else if (cleanCmdLower === 'tree') {
        setCurrentView('tree');
        response = <div className={styles.response}>Launching Directory Structure Visualizer...</div>;
+    } else if (cleanCmdLower === 'game') {
+       setCurrentView('game');
+       response = <div className={styles.response}>INITIATING ARCADE PROTOCOL...</div>;
     } else if (cleanCmdLower === 'ls') {
       response = (
         <div className={styles.projectGrid}>
@@ -279,6 +284,8 @@ export const PortfolioTerminal = () => {
         return <KanbanBoard />;
       case 'tree':
         return <StructureVisualizer />;
+      case 'game':
+        return <GameLauncher />;
       case 'updates':
         return (
             <div className={styles.response}>
