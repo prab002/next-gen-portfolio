@@ -1,68 +1,124 @@
-"use client";
-
 import React from 'react';
-import { ContributionDay } from './services/github';
+import { ContributionYear, LatestActivity } from './services/github';
 import styles from './PortfolioTerminal.module.css';
 
 interface ReactorCoreProps {
-  data: ContributionDay[];
+  graphData: ContributionYear | null;
+  latestActivity: LatestActivity | null;
 }
 
-export const ReactorCore = ({ data }: ReactorCoreProps) => {
-  // Calculate total for "Power Level"
-  const totalContributions = data.reduce((acc, curr) => acc + curr.count, 0);
-  const efficiency = Math.min(100, Math.round((totalContributions / 40) * 100)); // Arbitrary target
+export const ReactorCore = ({ graphData, latestActivity }: ReactorCoreProps) => {
+  if (!graphData || !graphData.contributions) {
+      return (
+          <div className={styles.aiThinking}>
+            Initializing OpsCenter... <br/>
+            Running Diagnostics...
+          </div>
+      );
+  }
+
+  const total = Object.values(graphData.total).reduce((a, b) => a + b, 0);
+  
+  // Group by weeks [Sunday - Saturday]
+  const weeks: any[][] = [];
+  let currentWeek: any[] = [];
+  
+  // The API returns a flat list. Usually starts on Jan 1st.
+  // We should pad the first week if standard GitHub style (columns are weeks).
+  // But let's stick to the flat chunking for now, simpler.
+  graphData.contributions.forEach((day, i) => {
+      currentWeek.push(day);
+      if (currentWeek.length === 7 || i === graphData.contributions.length - 1) {
+          weeks.push(currentWeek);
+          currentWeek = [];
+      }
+  });
+
+  // Calculate Month Labels
+  const monthLabels: React.ReactNode[] = [];
+  let lastMonth = -1;
+  weeks.forEach((week, i) => {
+     const date = new Date(week[0].date);
+     const month = date.getMonth();
+     if (month !== lastMonth) {
+         monthLabels.push(
+             <span key={i} style={{ flex: 1, textAlign: 'left', minWidth: '30px' }}>
+                 {date.toLocaleString('default', { month: 'short' })}
+             </span>
+         );
+         lastMonth = month;
+     } else {
+         // Empty placeholder for alignment
+         monthLabels.push(<span key={i} style={{ flex: 1, minWidth: '13px' }} />);
+     }
+  });
 
   return (
     <div className={styles.reactorContainer}>
       <div className={styles.reactorHeader}>
-        <span className={styles.reactorTitle}>OPS_CENTER // SIGNAL_RATES</span>
-        <span className={styles.reactorStatus}>
-           CORE_EFFICIENCY: <span style={{ color: parseEfficiencyColor(efficiency) }}>{efficiency}%</span>
+        <span className={styles.reactorTitle}>
+            {total.toLocaleString()} contributions in the last year
         </span>
       </div>
 
-      <div className={styles.fuelRodContainer}>
-        {data.map((day, i) => (
-          <div key={day.date} className={styles.fuelRodWrapper} title={`${day.count} commits on ${day.date}`}>
-             <div 
-               className={styles.fuelRod} 
-               style={{ 
-                 height: `${Math.max(10, day.level * 25)}%`,
-                 backgroundColor: getRodColor(day.level),
-                 animationDelay: `${i * 0.1}s` 
-               }} 
-             />
-             <div className={styles.fuelDate}>{day.date.slice(5)}</div>
-          </div>
-        ))}
+      <div className={styles.graphScrollWrapper}>
+        {/* Month Labels - Simplified approach: specific positions */}
+        <div style={{ display: 'flex', marginLeft: '0', marginBottom: '8px', fontSize: '0.75rem', color: '#8b949e', gap: '3px' }}>
+            {weeks.map((week, i) => {
+                 const d = new Date(week[0].date);
+                 const shouldLabel = i === 0 || d.getMonth() !== new Date(weeks[i-1][0].date).getMonth();
+                 return (
+                     <div key={i} style={{ width: '11px', overflow: 'visible', whiteSpace: 'nowrap' }}>
+                        {shouldLabel ? d.toLocaleString('default', { month: 'short' }) : ''}
+                     </div>
+                 );
+            })}
+        </div>
+
+        <div className={styles.yearGraph}>
+            {weeks.map((week, wIndex) => (
+                <div key={wIndex} className={styles.weekColumn}>
+                    {/* Fill incomplete weeks with transparent blocks if needed, usually fine though */}
+                    {week.map((day) => (
+                        <div 
+                            key={day.date} 
+                            className={styles.dayCell}
+                            style={{ backgroundColor: getGitHubColor(day.level) }}
+                            title={`${day.count} contributions on ${day.date}`}
+                        />
+                    ))}
+                </div>
+            ))}
+        </div>
       </div>
       
-      <div className={styles.reactorFooter}>
-         <div className={styles.reactorMetric}>
-            LABEL: GITHUB_ACTIVITY
-         </div>
-         <div className={styles.reactorMetric}>
-            RANGE: 14_CYCLES
-         </div>
-      </div>
+      {latestActivity && (
+          <div className={styles.latestPushSection}>
+             <span>Latest Activity:</span>
+             <span className={styles.pushRepo}>{latestActivity.repo}</span>
+             <span className={styles.pushMsg}>{latestActivity.message.slice(0, 50)}</span>
+             <span style={{ marginLeft: 'auto', fontSize: '0.75rem' }}>
+                 {new Date(latestActivity.timestamp).toLocaleDateString()}
+             </span>
+          </div>
+      )}
     </div>
   );
 };
 
-const getRodColor = (level: number) => {
+const getGitHubColor = (level: number) => {
+    // Correct GitHub standard colors (Dark Mode)
+    // 0: #161b22 -> #2d333b (our custom lighter base)
+    // 1: #0e4429
+    // 2: #006d32
+    // 3: #26a641
+    // 4: #39d353
     switch(level) {
-        case 0: return '#1a1a1a'; // Inert
-        case 1: return '#0e4429'; // Low
-        case 2: return '#006d32'; // Med
-        case 3: return '#26a641'; // High
-        case 4: return '#39d353'; // Critical
-        default: return '#1a1a1a';
+        case 0: return '#2d333b'; // Lighter base for visibility
+        case 1: return '#0e4429';
+        case 2: return '#006d32';
+        case 3: return '#26a641';
+        case 4: return '#39d353';
+        default: return '#2d333b';
     }
-};
-
-const parseEfficiencyColor = (eff: number) => {
-    if (eff > 80) return '#39d353';
-    if (eff > 50) return '#e0e020';
-    return '#888';
 };

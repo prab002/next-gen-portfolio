@@ -12,7 +12,10 @@ import { KanbanBoard } from './KanbanBoard';
 import { StructureVisualizer } from './StructureVisualizer';
 import { GameLauncher } from './GameLauncher';
 import { BlogSection } from './BlogSection';
-import { getMockContributions } from './services/github';
+import { getContributionGraph, getLatestActivity, getMockGraph } from './services/github';
+// ... styles ...
+
+// ... styles ...
 import styles from './PortfolioTerminal.module.css';
 
 interface CommandOutput {
@@ -65,6 +68,25 @@ export const PortfolioTerminal = () => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  
+  // Real GitHub Data
+  const [graphData, setGraphData] = useState<any>(null);
+  const [latestActivity, setLatestActivity] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+       const user = 'prabhanjan002';
+       // Parallel fetch
+       const [gData, lActivity] = await Promise.all([
+           getContributionGraph(user),
+           getLatestActivity(user)
+       ]);
+       setGraphData(gData || getMockGraph());
+       setLatestActivity(lActivity);
+    };
+    fetchData();
+  }, []);
+
 
   const HELP_TEXT = `
   - ls              : List all projects
@@ -290,10 +312,12 @@ export const PortfolioTerminal = () => {
       case 'updates':
         return (
             <div className={styles.response}>
-                <div style={{ marginBottom: '1rem', color: 'var(--color-text-muted)' }}>SYSTEM: CONNECTED TO GITHUB_NET</div>
-                <ReactorCore data={getMockContributions()} />
+                <div style={{ marginBottom: '1rem', color: 'var(--color-text-muted)' }}>
+                    SYSTEM: CONNECTED TO GITHUB_NET (@prabhanjan002)
+                </div>
+                <ReactorCore graphData={graphData} latestActivity={latestActivity} />
                 <div style={{ marginTop: '2rem', color: '#666', fontStyle: 'italic' }}>
-                   Latest Patch: v2.1.0 - Neural Link & OpsCenter Online.
+                   Latest Patch: v2.2.0 - Operations Center Upgrade.
                 </div>
             </div>
         );
@@ -312,18 +336,6 @@ export const PortfolioTerminal = () => {
     <div className={styles.terminalContainer} onClick={focusInput}>
        <div className={styles.tacticalStatusBar}>
         <div className={styles.statusGroup}>
-          <span className={styles.statusLabel}>REF:</span>
-          <span className={styles.statusValue}>PRAB-PF-V2</span>
-        </div>
-        <div className={styles.statusGroup}>
-          <span className={styles.statusDot} />
-          <span className={styles.statusValue}>SYSTEM ONLINE</span>
-        </div>
-        <div className={styles.statusGroup}>
-          <span className={styles.statusLabel}>SEC:</span>
-          <span className={`${styles.statusValue} ${styles.alert}`}>HIGH</span>
-        </div>
-        <div className={styles.statusGroup} style={{ marginLeft: 'auto' }}>
           <span className={styles.statusValue}>{new Date().toISOString().split('T')[0]}</span>
         </div>
       </div>

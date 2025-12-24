@@ -590,6 +590,50 @@
   animation: rodPulse 3s infinite ease-in-out;
 }
 
+.yearGraph {
+  display: flex;
+  gap: 3px;
+  /* Auto height or fixed */
+}
+
+.monthRow {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 5px;
+  margin-left: 20px; /* Offset for day labels if we had them, or just alignment */
+  font-size: 0.75rem;
+  color: #8b949e;
+  height: 15px;
+}
+
+.monthLabel {
+  /* We might need to handle spacing dynamically in JS or use grid */
+}
+
+.weekColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dayCell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  background-color: #2d333b; /* Lighter Level 0 for visibility */
+  outline: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.latestPushSection {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #30363d;
+  font-size: 0.85rem;
+  color: #8b949e;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 .fuelDate {
   font-size: 0.55rem;
   color: #666;
