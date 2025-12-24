@@ -6,6 +6,7 @@ import { PROJECTS } from './projects.data';
 import { ProjectTerminal } from './ProjectTerminal';
 import { AsciiBanner } from './AsciiBanner';
 import { WhoAmI } from './WhoAmI';
+import { PreviewSidebar } from './PreviewSidebar';
 import styles from './PortfolioTerminal.module.css';
 
 interface CommandOutput {
@@ -53,6 +54,9 @@ export const PortfolioTerminal = () => {
   const [input, setInput] = useState('');
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [currentView, setCurrentView] = useState<ViewMode>('portfolio');
+  const [currentSkill, setCurrentSkill] = useState('');
+  const [previewProjects, setPreviewProjects] = useState<Project[]>([]);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -144,6 +148,80 @@ export const PortfolioTerminal = () => {
     setInput('');
   };
 
+  const handleSkillSelect = (skill: string) => {
+    // 1. Visual feedback in terminal
+    const signalMsg = (
+        <div className={styles.response}>
+            <span className={styles.success}>⚡ DETECTED SIGNAL: MATRIX_NODE[{skill}]</span>
+            <br/>
+            <span className={styles.aiThinking}>Initiating query protocol...</span>
+        </div>
+    );
+    setHistory(prev => [...prev, { command: `signal_intercept: ${skill}`, output: signalMsg }]);
+    
+    setCurrentSkill(skill);
+
+    // 2. Filter logic
+    const matchingProjects = PROJECTS.filter(p => 
+        p.tags.some(t => t.toLowerCase().includes(skill.toLowerCase())) ||
+        p.description.toLowerCase().includes(skill.toLowerCase()) ||
+        p.title.toLowerCase().includes(skill.toLowerCase())
+    );
+
+    // 3. Display results
+    setPreviewProjects(matchingProjects);
+    setIsPreviewOpen(true);
+
+    let output: React.ReactNode;
+    if (matchingProjects.length > 0) {
+        output = (
+            <div className={styles.projectGrid}>
+              <div className={styles.response} style={{ gridColumn: '1/-1', marginBottom: '0.5rem' }}>
+                Found {matchingProjects.length} projects matching module "{skill}":
+              </div>
+              {matchingProjects.map(p => (
+                <div key={p.id} className={styles.dashboardCard}>
+                  <div className={styles.cardHeader}>
+                    <div className={styles.cardTitle}>{p.title}</div>
+                    <div className={styles.cardValue}>{p.tags[0] || 'Web App'}</div>
+                  </div>
+                  <p style={{ color: '#888', fontSize: '0.9rem', flex: 1 }}>{p.description}</p>
+                  
+                  <div className={styles.cardFooter}>
+                    <div className={styles.cardIcon}>⚡</div>
+                    <div 
+                      className={styles.cardAction}
+                      onClick={() => handleCommand(`open ${p.slug}`)}
+                    >
+                      View Project ➜
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+        );
+    } else {
+        output = (
+            <div className={styles.error}>
+                No projects linked to node "{skill}". System recommends: Expand dataset.
+            </div>
+        );
+    }
+    
+    // Delay to simulate processing, then show result and switch view if needed
+    setTimeout(() => {
+        setHistory(prev => [...prev, { command: `query_result: ${skill}`, output }]);
+        // Optional: Switch back to portfolio view to see the list better? 
+        // Or just keep in terminal history. Let's keep current view but scroll to bottom.
+        // If we want to force user to see it, maybe switch to 'portfolio' effectively?
+        // Actually, let's switch to 'portfolio' so they see the terminal output clearly if they were in 'whoami'
+        // But 'whoami' also has the terminal output... 
+        // Let's stay in 'whoami' so they can click more nodes!  
+        // But the terminal output area might be small if current view is whoami.
+        // Let's force scroll.
+    }, 600);
+  };
+
   const focusInput = () => {
     inputRef.current?.focus();
   };
@@ -173,7 +251,7 @@ export const PortfolioTerminal = () => {
           </>
         );
       case 'whoami':
-        return <WhoAmI />;
+        return <WhoAmI onSkillSelect={handleSkillSelect} />;
       case 'updates':
         return <div className={styles.response}>System Updates: No new patches available at this time. Check back later.</div>;
       case 'blogs':
@@ -189,7 +267,7 @@ export const PortfolioTerminal = () => {
 
   return (
     <div className={styles.terminalContainer} onClick={focusInput}>
-      <div className={styles.tacticalStatusBar}>
+       <div className={styles.tacticalStatusBar}>
         <div className={styles.statusGroup}>
           <span className={styles.statusLabel}>REF:</span>
           <span className={styles.statusValue}>PRAB-PF-V2</span>
@@ -207,7 +285,9 @@ export const PortfolioTerminal = () => {
         </div>
       </div>
 
-      <div className={styles.terminalContainerInner}>
+      <div className={styles.terminalContainerInner} style={{ flexDirection: 'row', overflow: 'hidden' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
+        
         <div className={styles.welcomeMessage}>
           {/* Navigation Bar */}
           <div className={styles.dashboardHeader}>
@@ -242,38 +322,47 @@ export const PortfolioTerminal = () => {
           {renderContent()}
         </div>
 
-      <div className={styles.outputArea}>
-        <div className={styles.activityLogTitle}>
-           <span className={styles.logIcon}>⚡</span> Activity Log
-        </div>
-        {history.map((entry, i) => (
-          <div key={i}>
-            <div className={styles.commandLine}>
-              <span className={styles.prompt}>visitor@portfolio:~$</span>
-              <span className={styles.command}>{entry.command}</span>
+        <div className={styles.outputArea}>
+            <div className={styles.activityLogTitle}>
+            <span className={styles.logIcon}>⚡</span> Activity Log
             </div>
-            <div>{entry.output}</div>
-          </div>
-        ))}
-        
-        <div className={styles.inputLine}>
-          <span className={styles.prompt}>visitor@portfolio:~$</span>
-          <input
-            ref={inputRef}
-            type="text"
-            className={styles.input}
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleCommand(input)}
-            autoFocus
-            autoComplete="off"
-            spellCheck="false"
-            placeholder="Type 'help', 'ls' or ask 'ai'..."
-          />
+            {history.map((entry, i) => (
+            <div key={i}>
+                <div className={styles.commandLine}>
+                <span className={styles.prompt}>visitor@portfolio:~$</span>
+                <span className={styles.command}>{entry.command}</span>
+                </div>
+                <div>{entry.output}</div>
+            </div>
+            ))}
+            
+            <div className={styles.inputLine}>
+            <span className={styles.prompt}>visitor@portfolio:~$</span>
+            <input
+                ref={inputRef}
+                type="text"
+                className={styles.input}
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleCommand(input)}
+                autoFocus
+                autoComplete="off"
+                spellCheck="false"
+                placeholder="Type 'help', 'ls' or ask 'ai'..."
+            />
+            </div>
+            <div ref={bottomRef} />
         </div>
-        <div ref={bottomRef} />
+        </div>
+        
+        <PreviewSidebar 
+            isOpen={isPreviewOpen} 
+            currentSkill={currentSkill}
+            projects={previewProjects}
+            onClose={() => setIsPreviewOpen(false)}
+            onOpenProject={(slug) => handleCommand(`open ${slug}`)}
+        />
       </div>
-    </div>
     </div>
   );
 };

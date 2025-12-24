@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import styles from './PortfolioTerminal.module.css';
+import TechGraph from './TechGraph';
 
 const BOT_FRAMES = [
   `
@@ -28,7 +31,11 @@ const BOT_FRAMES = [
   `
 ];
 
-export const WhoAmI = () => {
+interface WhoAmIProps {
+    onSkillSelect?: (skill: string) => void;
+}
+
+export const WhoAmI = ({ onSkillSelect }: WhoAmIProps) => {
   const [frameIndex, setFrameIndex] = useState(0);
   const [typedRole, setTypedRole] = useState('');
   const [typedHobbies, setTypedHobbies] = useState('');
@@ -109,6 +116,10 @@ export const WhoAmI = () => {
              <span className={styles.infoLabel}>STATUS ::</span> {typedOpenTo}<span className={styles.cursor}>_</span>
           </div>
         )}
+      </div>
+
+      <div className={styles.techGraphWrapper}>
+         <TechGraph onNodeSelect={onSkillSelect} />
       </div>
     </div>
   );
