@@ -1057,6 +1057,70 @@
     font-family: 'Courier New', monospace;
 }
 
+/* Game Overlays */
+.gameWrapper {
+    cursor: none; /* Hide default cursor for immersion */
+}
+
+.gameOverlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.85);
+    border: 2px solid #00ffff;
+    padding: 3rem;
+    text-align: center;
+    color: #fff;
+    border-radius: 12px;
+    z-index: 200;
+    box-shadow: 0 0 50px rgba(0, 255, 255, 0.2);
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.gameOverlay h1 {
+    font-family: 'Press Start 2P', cursive, 'Courier New', monospace;
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+.scoreHud {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-shadow: 0 0 5px #ff00ff;
+    z-index: 150;
+    background: rgba(0,0,0,0.5);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.textBtn {
+    background: transparent;
+    border: 1px solid #666;
+    color: #aaa;
+    padding: 0.8rem;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+.textBtn:hover {
+    border-color: #fff;
+    color: #fff;
+}
+
 .cardActions {
   display: flex;
   gap: 0.5rem;

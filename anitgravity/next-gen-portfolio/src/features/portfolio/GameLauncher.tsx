@@ -1,7 +1,8 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './PortfolioTerminal.module.css';
+import { GridRunner } from './games/GridRunner';
 
 interface Game {
   id: string;
@@ -41,13 +42,19 @@ const GAMES: Game[] = [
     id: 'racer',
     title: 'GRID RUNNER',
     genre: 'Action',
-    status: 'prototype',
+    status: 'playable',
     description: 'High speed data evasion.',
     icon: '🏎️'
   }
 ];
 
 export const GameLauncher = () => {
+  const [activeGame, setActiveGame] = useState<string | null>(null);
+
+  if (activeGame === 'racer') {
+      return <GridRunner onExit={() => setActiveGame(null)} />;
+  }
+
   return (
     <div className={styles.gameContainer}>
         <div className={styles.gameHeader}>
@@ -73,6 +80,7 @@ export const GameLauncher = () => {
                         <button 
                             className={`${styles.playBtn} ${game.status !== 'playable' ? styles.disabled : ''}`}
                             disabled={game.status !== 'playable'}
+                            onClick={() => game.status === 'playable' ? setActiveGame(game.id) : null}
                         >
                             {game.status === 'playable' ? 'INSERT COIN' : 'LOCKED'}
                         </button>
