@@ -44,7 +44,8 @@
   }
   
   .command {
-    color: var(--color-text-main);
+    color: #ffffff; /* Force high contrast */
+    font-weight: bold;
   }
   
   .response {
@@ -52,6 +53,8 @@
     margin-left: 2rem;
     line-height: 1.5;
     white-space: pre-wrap;
+    color: #e5e5e5; /* Force high contrast */
+    background: transparent;
   }
   
   .inputLine {
@@ -64,7 +67,7 @@
   .input {
     background: transparent;
     border: none;
-    color: #00ff00; /* Bright terminal green */
+    color: #ffffff; /* FORCE WHITE TEXT */
     font-family: inherit;
     font-size: 1rem;
     flex: 1;
