@@ -9,6 +9,7 @@ import { WhoAmI } from './WhoAmI';
 import { PreviewSidebar } from './PreviewSidebar';
 import { ReactorCore } from './ReactorCore';
 import { KanbanBoard } from './KanbanBoard';
+import { StructureVisualizer } from './StructureVisualizer';
 import { getMockContributions } from './services/github';
 import styles from './PortfolioTerminal.module.css';
 
@@ -50,7 +51,7 @@ const AIResponse = ({ query }: { query: string }) => {
   );
 };
 
-type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs' | 'kanban';
+type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs' | 'kanban' | 'tree';
 
 export const PortfolioTerminal = () => {
   const [history, setHistory] = useState<CommandOutput[]>([]);
@@ -67,6 +68,7 @@ export const PortfolioTerminal = () => {
   - ls              : List all projects
   - open <project>  : Open a specific project by slug or ID
   - kanban          : Open Project Management Board
+  - tree            : Launch Folder Structure Generator
   - ai <query>      : Ask AI Assistant (e.g., 'ai skills', 'ai background')
   - help            : Show this help message
   - clear           : Clear terminal history
@@ -90,6 +92,9 @@ export const PortfolioTerminal = () => {
     } else if (cleanCmdLower === 'kanban') {
        setCurrentView('kanban');
        response = <div className={styles.response}>Initializing Project Management Protocol...</div>;
+    } else if (cleanCmdLower === 'tree') {
+       setCurrentView('tree');
+       response = <div className={styles.response}>Launching Directory Structure Visualizer...</div>;
     } else if (cleanCmdLower === 'ls') {
       response = (
         <div className={styles.projectGrid}>
@@ -229,7 +234,18 @@ export const PortfolioTerminal = () => {
     }, 600);
   };
 
-  const focusInput = () => {
+  const focusInput = (e: React.MouseEvent) => {
+    // Pevet hijacking focus if user is clicking on another interactive element (like the tree editor)
+    const target = e.target as HTMLElement;
+    if (
+      target.tagName === 'INPUT' || 
+      target.tagName === 'TEXTAREA' || 
+      target.isContentEditable ||
+      // Also check if text is being selected
+      window.getSelection()?.toString().length
+    ) {
+      return;
+    }
     inputRef.current?.focus();
   };
 
@@ -261,6 +277,8 @@ export const PortfolioTerminal = () => {
         return <WhoAmI onSkillSelect={handleSkillSelect} />;
       case 'kanban':
         return <KanbanBoard />;
+      case 'tree':
+        return <StructureVisualizer />;
       case 'updates':
         return (
             <div className={styles.response}>
