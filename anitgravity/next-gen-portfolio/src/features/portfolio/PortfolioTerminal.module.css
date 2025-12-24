@@ -656,6 +656,383 @@
   50% { opacity: 1; box-shadow: 0 0 15px rgba(57, 211, 83, 0.3); }
 }
 
+/* Queue System Styles - Revamped */
+.queueContainer {
+  display: flex;
+  height: 100%;
+  gap: 1.5rem;
+  padding: 1rem;
+  background: radial-gradient(circle at center, #1a1f26 0%, #0d1117 100%);
+}
+
+.queueDisplay {
+  flex: 1;
+  border: 1px solid #333;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: #0d1117;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+.queueHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-mono);
+  border-bottom: 1px solid #222;
+  padding-bottom: 1rem;
+}
+
+.headerTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  background: #00ff00;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #00ff00;
+}
+
+.zoneId {
+  font-size: 0.8rem;
+  color: #666;
+  background: #161b22;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* LED Screen */
+.ledScreen {
+  background: #000;
+  border: 4px solid #222;
+  border-radius: 6px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+.scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.ledContent {
+  color: #00ff00;
+  text-align: center;
+  z-index: 1;
+  width: 100%;
+}
+
+.ledLabel {
+  font-size: 0.9rem;
+  color: #006600;
+  letter-spacing: 4px;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.ledNumber {
+  font-size: 5rem;
+  font-weight: 900;
+  color: #00ff00;
+  text-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+  margin: 0.5rem 0;
+}
+
+.ledName {
+  font-size: 1.8rem;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.turnSignal {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #00ffff;
+  animation: blink 1.5s infinite;
+}
+
+/* Queue List */
+.upNextList {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.listHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  color: #888;
+  font-size: 0.8rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.scrollArea {
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 0.5rem;
+}
+
+.queueCard {
+  background: #1a1f26;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 0.8rem;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.queueCard:hover {
+  background: #21262d;
+  border-color: #58a6ff;
+  transform: translateX(2px);
+}
+
+.queueCard::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #333;
+  transition: background 0.2s;
+}
+
+.queueCard:hover::before {
+  background: #58a6ff;
+}
+
+.cardLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cardId {
+  font-family: var(--font-mono);
+  font-weight: bold;
+  color: #58a6ff;
+  font-size: 1.1rem;
+}
+
+.cardInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardName {
+  font-weight: 500;
+  color: #fff;
+}
+
+.cardTime {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.tickButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  background: transparent;
+  color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: bold;
+}
+
+.queueCard:hover .tickButton {
+  border-color: #555;
+  color: #555;
+}
+
+.tickButton:hover {
+  background: #238636 !important;
+  border-color: #238636 !important;
+  color: #fff !important;
+  transform: scale(1.1);
+}
+
+/* Control Panel */
+.queueControls {
+  width: 350px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.controlHeader {
+  font-size: 0.8rem;
+  color: #666;
+  font-family: var(--font-mono);
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
+}
+
+.inputGroup {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.queueInput {
+  flex: 1;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  color: white;
+  padding: 0.8rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.queueInput:focus {
+  border-color: #58a6ff;
+  outline: none;
+}
+
+.actionBtn {
+  background: #238636;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actionBtn:hover {
+  background: #2ea043;
+}
+
+.buttonGrid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 2rem;
+}
+
+.callBtn, .admitBtn {
+  padding: 1rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.callBtn {
+  background: #1f6feb;
+  color: white;
+  grid-column: 1 / -1; /* Full width */
+}
+
+.admitBtn {
+  background: #333;
+  color: #ccc;
+  grid-column: 1 / -1;
+}
+
+.admitBtn:not(:disabled) {
+  background: #238636;
+  color: white;
+}
+
+.callBtn:active, .admitBtn:active {
+  transform: scale(0.98);
+}
+
+/* Log Panel */
+.logPanel {
+  background: #0d1117;
+  border-radius: 8px;
+  padding: 1rem;
+  flex: 1;
+  border: 1px solid #222;
+  overflow-y: auto;
+}
+
+.logHeader {
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+}
+
+.logItem {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #1a1f26;
+}
+
+.logCheck {
+  color: #238636;
+  font-weight: bold;
+}
+
+.logId {
+  font-family: var(--font-mono);
+  color: #888;
+}
+
+.logName {
+  flex: 1;
+  color: #ccc;
+}
+
+.logTime {
+  color: #444;
+  font-size: 0.75rem;
+}
+
 /* Kanban Board */
 .kanbanContainer {
   height: 100%;

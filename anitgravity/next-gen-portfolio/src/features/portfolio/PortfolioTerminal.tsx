@@ -12,10 +12,10 @@ import { KanbanBoard } from './KanbanBoard';
 import { StructureVisualizer } from './StructureVisualizer';
 import { GameLauncher } from './GameLauncher';
 import { BlogSection } from './BlogSection';
+import { QueueSystem } from './QueueSystem';
 import { getContributionGraph, getLatestActivity, getMockGraph } from './services/github';
 // ... styles ...
 
-// ... styles ...
 import styles from './PortfolioTerminal.module.css';
 
 interface CommandOutput {
@@ -56,7 +56,7 @@ const AIResponse = ({ query }: { query: string }) => {
   );
 };
 
-type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs' | 'kanban' | 'tree' | 'game';
+type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs' | 'kanban' | 'tree' | 'game' | 'queue';
 
 export const PortfolioTerminal = () => {
   const [history, setHistory] = useState<CommandOutput[]>([]);
@@ -123,6 +123,9 @@ export const PortfolioTerminal = () => {
     } else if (cleanCmdLower === 'game') {
        setCurrentView('game');
        response = <div className={styles.response}>INITIATING ARCADE PROTOCOL...</div>;
+    } else if (cleanCmdLower === 'queue') {
+       setCurrentView('queue');
+       response = <div className={styles.response}>Launching Cyber-Triage System...</div>;
     } else if (cleanCmdLower === 'ls') {
       response = (
         <div className={styles.projectGrid}>
@@ -323,6 +326,8 @@ export const PortfolioTerminal = () => {
         );
       case 'blogs':
         return <BlogSection />;
+      case 'queue':
+        return <QueueSystem />;
       default:
         return null;
     }
@@ -376,6 +381,12 @@ export const PortfolioTerminal = () => {
                 onClick={() => setCurrentView('kanban')}
               >
                 Kanban
+              </span>
+              <span 
+                className={`${styles.navPill} ${currentView === 'queue' ? styles.active : ''}`}
+                onClick={() => setCurrentView('queue')}
+              >
+                Queue
               </span>
             </div>
           </div>
