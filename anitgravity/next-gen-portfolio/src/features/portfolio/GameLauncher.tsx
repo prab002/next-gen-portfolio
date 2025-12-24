@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import styles from './PortfolioTerminal.module.css';
 import { GridRunner } from './games/GridRunner';
+import { CyberLogistics } from './games/CyberLogistics';
 
 interface Game {
   id: string;
@@ -45,6 +46,14 @@ const GAMES: Game[] = [
     status: 'playable',
     description: 'High speed data evasion.',
     icon: '🏎️'
+  },
+  {
+    id: 'cyber',
+    title: 'CYBER LOGISTICS',
+    genre: 'Simulation',
+    status: 'playable',
+    description: 'Drone delivery in neon city.',
+    icon: '🛸'
   }
 ];
 
@@ -53,6 +62,9 @@ export const GameLauncher = () => {
 
   if (activeGame === 'racer') {
       return <GridRunner onExit={() => setActiveGame(null)} />;
+  }
+  if (activeGame === 'cyber') {
+      return <CyberLogistics onExit={() => setActiveGame(null)} />;
   }
 
   return (
