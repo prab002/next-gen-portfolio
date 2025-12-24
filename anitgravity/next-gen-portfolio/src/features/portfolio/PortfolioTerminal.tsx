@@ -8,6 +8,7 @@ import { AsciiBanner } from './AsciiBanner';
 import { WhoAmI } from './WhoAmI';
 import { PreviewSidebar } from './PreviewSidebar';
 import { ReactorCore } from './ReactorCore';
+import { KanbanBoard } from './KanbanBoard';
 import { getMockContributions } from './services/github';
 import styles from './PortfolioTerminal.module.css';
 
@@ -49,7 +50,7 @@ const AIResponse = ({ query }: { query: string }) => {
   );
 };
 
-type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs';
+type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs' | 'kanban';
 
 export const PortfolioTerminal = () => {
   const [history, setHistory] = useState<CommandOutput[]>([]);
@@ -65,6 +66,7 @@ export const PortfolioTerminal = () => {
   const HELP_TEXT = `
   - ls              : List all projects
   - open <project>  : Open a specific project by slug or ID
+  - kanban          : Open Project Management Board
   - ai <query>      : Ask AI Assistant (e.g., 'ai skills', 'ai background')
   - help            : Show this help message
   - clear           : Clear terminal history
@@ -85,6 +87,9 @@ export const PortfolioTerminal = () => {
 
     if (cleanCmdLower === 'help') {
       response = <div className={styles.response}>{HELP_TEXT}</div>;
+    } else if (cleanCmdLower === 'kanban') {
+       setCurrentView('kanban');
+       response = <div className={styles.response}>Initializing Project Management Protocol...</div>;
     } else if (cleanCmdLower === 'ls') {
       response = (
         <div className={styles.projectGrid}>
@@ -254,6 +259,8 @@ export const PortfolioTerminal = () => {
         );
       case 'whoami':
         return <WhoAmI onSkillSelect={handleSkillSelect} />;
+      case 'kanban':
+        return <KanbanBoard />;
       case 'updates':
         return (
             <div className={styles.response}>
@@ -325,6 +332,12 @@ export const PortfolioTerminal = () => {
                 onClick={() => setCurrentView('blogs')}
               >
                 Blogs
+              </span>
+              <span 
+                className={`${styles.navPill} ${currentView === 'kanban' ? styles.active : ''}`}
+                onClick={() => setCurrentView('kanban')}
+              >
+                Kanban
               </span>
             </div>
           </div>
