@@ -11,6 +11,7 @@ import { ReactorCore } from './ReactorCore';
 import { KanbanBoard } from './KanbanBoard';
 import { StructureVisualizer } from './StructureVisualizer';
 import { GameLauncher } from './GameLauncher';
+import { BlogSection } from './BlogSection';
 import { getMockContributions } from './services/github';
 import styles from './PortfolioTerminal.module.css';
 
@@ -297,7 +298,7 @@ export const PortfolioTerminal = () => {
             </div>
         );
       case 'blogs':
-        return <div className={styles.response}>Accessing Blog Network... No signals found. (Coming Soon)</div>;
+        return <BlogSection />;
       default:
         return null;
     }
