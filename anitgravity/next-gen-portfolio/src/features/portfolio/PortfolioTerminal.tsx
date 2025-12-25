@@ -14,6 +14,7 @@ import { GameLauncher } from './GameLauncher';
 import { BlogSection } from './BlogSection';
 import { QueueSystem } from './QueueSystem';
 import { TradeLogger } from './TradeLogger';
+import { QRGenerator } from './QRGenerator';
 import { getContributionGraph, getLatestActivity, getMockGraph } from './services/github';
 // ... styles ...
 
@@ -57,7 +58,7 @@ const AIResponse = ({ query }: { query: string }) => {
   );
 };
 
-type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs' | 'kanban' | 'tree' | 'game' | 'queue' | 'tradel';
+type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs' | 'kanban' | 'tree' | 'game' | 'queue' | 'tradel' | 'qr';
 
 export const PortfolioTerminal = () => {
   const [history, setHistory] = useState<CommandOutput[]>([]);
@@ -97,6 +98,7 @@ export const PortfolioTerminal = () => {
   - game            : Enter Arcade Mode
   - queue           : Launch Cyber-Triage Queue System
   - tradel          : Launch Trade Logger & Analytics
+  - qr              : Launch Quantum Response Encoder
   - ai <query>      : Ask AI Assistant (e.g., 'ai skills', 'ai background')
   - help            : Show this help message
   - clear           : Clear terminal history
@@ -132,6 +134,9 @@ export const PortfolioTerminal = () => {
     } else if (cleanCmdLower === 'tradel') {
        setCurrentView('tradel');
        response = <div className={styles.response}>Initializing Financial Ledger...</div>;
+    } else if (cleanCmdLower === 'qr') {
+       setCurrentView('qr');
+       response = <div className={styles.response}>Activating Quantum Response Encoder...</div>;
     } else if (cleanCmdLower === 'ls') {
       response = (
         <div className={styles.projectGrid}>
@@ -305,6 +310,7 @@ export const PortfolioTerminal = () => {
                 <li><span className={styles.highlight}>open &lt;name&gt;</span> - View project details</li>
                 <li><span className={styles.highlight}>ai</span> - Ask AI assistant</li>
                 <li><span className={styles.highlight}>whoami</span> - About me</li>
+                <li><span className={styles.highlight}>qr</span> - Quantum Encoder</li>
                 <li><span className={styles.highlight}>help</span> - Show full help menu</li>
               </ul>
             </div>
@@ -336,6 +342,8 @@ export const PortfolioTerminal = () => {
         return <QueueSystem />;
       case 'tradel':
          return <TradeLogger />;
+      case 'qr':
+         return <QRGenerator />;
       default:
         return null;
     }
@@ -401,6 +409,12 @@ export const PortfolioTerminal = () => {
                 onClick={() => setCurrentView('tradel')}
               >
                 Tradel
+              </span>
+              <span 
+                className={`${styles.navPill} ${currentView === 'qr' ? styles.active : ''}`}
+                onClick={() => setCurrentView('qr')}
+              >
+                QR
               </span>
             </div>
           </div>

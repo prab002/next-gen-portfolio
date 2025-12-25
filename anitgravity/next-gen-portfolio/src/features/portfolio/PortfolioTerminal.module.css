@@ -2347,8 +2347,155 @@
   transition: all 0.2s;
 }
 
-.blogCard:hover .blogAction {
-  background: rgba(0, 255, 255, 0.2);
-  border-color: #00ffff;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+
+/* QR Generator */
+.qrContainer {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a0a;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    position: relative;
+    overflow: hidden;
 }
+
+.qrHeader {
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 4rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1rem;
+}
+
+.qrTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-shadow: 0 0 5px #00ff00;
+}
+
+.qrStatus {
+    font-size: 1rem;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+.qrContent {
+    display: flex;
+    gap: 4rem;
+    align-items: center;
+    z-index: 10;
+}
+
+.qrInputSection {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 400px;
+}
+
+.qrLabel {
+    font-size: 1.2rem;
+    color: #888;
+    margin-bottom: 0.5rem;
+}
+
+.qrInput {
+    background: transparent;
+    border: 2px solid #333;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    padding: 1rem;
+    width: 100%;
+    transition: all 0.3s;
+    outline: none;
+}
+
+.qrInput:focus {
+    border-color: #00ff00;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+}
+
+.qrButton {
+    background: #003300;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.qrButton:hover {
+    background: #00ff00;
+    color: #000;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+.qrHelp {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+.qrPreviewSection {
+    position: relative;
+    padding: 2rem;
+}
+
+.qrFrame {
+    position: relative;
+    padding: 1rem;
+    border: 1px solid #00ff00;
+    background: rgba(0, 255, 0, 0.02);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+}
+
+.qrImage {
+    width: 250px;
+    height: 250px;
+    display: block;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 5px #00ff00);
+    border: 1px solid rgba(0, 255, 0, 0.2);
+}
+
+.qrPlaceholder {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    border: 2px dashed #333;
+    font-size: 1rem;
+}
+
+.qrCorner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: #00ff00;
+    border-style: solid;
+    transition: all 0.3s;
+}
+
+.tl { top: -2px; left: -2px; border-width: 2px 0 0 2px; }
+.tr { top: -2px; right: -2px; border-width: 2px 2px 0 0; }
+.bl { bottom: -2px; left: -2px; border-width: 0 0 2px 2px; }
+.br { bottom: -2px; right: -2px; border-width: 0 2px 2px 0; }
+
