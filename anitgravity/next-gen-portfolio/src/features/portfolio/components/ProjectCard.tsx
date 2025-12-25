@@ -1,8 +1,8 @@
 import React from 'react';
-import { Project } from './types';
+import { Project } from '../types/types';
 import { Card } from '@/components/ui/Card/Card';
 import { Button } from '@/components/ui/Button/Button';
-import styles from './ProjectCard.module.css';
+import styles from '../styles/ProjectCard.module.css';
 import Link from 'next/link';
 
 export const ProjectCard = ({ project }: { project: Project }) => {

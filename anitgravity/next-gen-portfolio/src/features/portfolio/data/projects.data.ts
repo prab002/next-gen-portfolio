@@ -1,4 +1,4 @@
-import { Project } from './types';
+import { Project } from '../types/types';
 
 // Add slug to the Project type if it's not already there, 
 // for now we'll just extend the data and assume type update is coming or we cast it.

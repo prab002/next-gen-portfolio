@@ -1,25 +1,25 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Project } from './types';
-import { PROJECTS } from './projects.data';
+import { Project } from './types/types';
+import { PROJECTS } from './data/projects.data';
 import { ProjectTerminal } from './ProjectTerminal';
-import { AsciiBanner } from './AsciiBanner';
-import { WhoAmI } from './WhoAmI';
-import { PreviewSidebar } from './PreviewSidebar';
-import { ReactorCore } from './ReactorCore';
-import { KanbanBoard } from './KanbanBoard';
-import { StructureVisualizer } from './StructureVisualizer';
-import { GameLauncher } from './GameLauncher';
-import { BlogSection } from './BlogSection';
-import { QueueSystem } from './QueueSystem';
-import { TradeLogger } from './TradeLogger';
-import { QRGenerator } from './QRGenerator';
-import { SpeedTyper } from './SpeedTyper';
+import { AsciiBanner } from './components/AsciiBanner';
+import { WhoAmI } from './components/WhoAmI';
+import { PreviewSidebar } from './components/PreviewSidebar';
+import { ReactorCore } from './components/ReactorCore';
+import { KanbanBoard } from './sections/KanbanBoard';
+import { StructureVisualizer } from './sections/StructureVisualizer';
+import { GameLauncher } from './sections/GameLauncher';
+import { BlogSection } from './sections/BlogSection';
+import { QueueSystem } from './sections/QueueSystem';
+import { TradeLogger } from './sections/TradeLogger';
+import { QRGenerator } from './sections/QRGenerator';
+import { SpeedTyper } from './sections/SpeedTyper';
 import { getContributionGraph, getLatestActivity, getMockGraph } from './services/github';
 // ... styles ...
 
-import styles from './PortfolioTerminal.module.css';
+import styles from './styles/PortfolioTerminal.module.css';
 
 interface CommandOutput {
   command: string;
@@ -221,10 +221,13 @@ export const PortfolioTerminal = () => {
     setCurrentSkill(skill);
 
     // 2. Filter logic
+    if (!skill) return;
+    const lowerSkill = skill.toLowerCase();
+    
     const matchingProjects = PROJECTS.filter(p => 
-        p.tags.some(t => t.toLowerCase().includes(skill.toLowerCase())) ||
-        p.description.toLowerCase().includes(skill.toLowerCase()) ||
-        p.title.toLowerCase().includes(skill.toLowerCase())
+        p.tags?.some(t => t?.toLowerCase().includes(lowerSkill)) ||
+        p.description?.toLowerCase().includes(lowerSkill) ||
+        p.title?.toLowerCase().includes(lowerSkill)
     );
 
     // 3. Display results

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './PortfolioTerminal.module.css';
+import styles from '../styles/PortfolioTerminal.module.css';
 
 export const QRGenerator = () => {
     const [input, setInput] = useState('');

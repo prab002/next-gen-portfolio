@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import styles from './PortfolioTerminal.module.css';
+import styles from '../styles/PortfolioTerminal.module.css';
 
 const WORD_POOL = [
     'system', 'protocol', 'network', 'interface', 'matrix', 'cyber', 'data', 'node', 'link', 'access',

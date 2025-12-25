@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Project } from './types';
+import { Project } from './types/types';
 import { StreamingText } from '../ai/StreamingText';
 import { Button } from '@/components/ui/Button/Button';
 import Link from 'next/link';
-import styles from './ProjectTerminal.module.css';
+import styles from './styles/ProjectTerminal.module.css';
 
 interface CommandOutput {
   command: string;

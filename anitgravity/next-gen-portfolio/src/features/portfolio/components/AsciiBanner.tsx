@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import styles from './PortfolioTerminal.module.css';
+import styles from '../styles/PortfolioTerminal.module.css';
 
 const ASCII_SHORT = `
  ____   ____      _    ____  

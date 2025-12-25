@@ -1,9 +1,11 @@
+
 "use client";
 
 import React, { useState } from 'react';
-import styles from './PortfolioTerminal.module.css';
-import { GridRunner } from './games/GridRunner';
-import { CyberLogistics } from './games/CyberLogistics';
+import styles from '../styles/PortfolioTerminal.module.css';
+import { GridRunner } from '../games/GridRunner';
+import { CyberLogistics } from '../games/CyberLogistics';
+import { Project } from '../types/types';
 
 interface Game {
   id: string;

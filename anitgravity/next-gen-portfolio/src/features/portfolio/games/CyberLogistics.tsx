@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { PerspectiveCamera, Stars, Environment, Text, Html } from '@react-three/drei';
 import * as THREE from 'three';
-import styles from '../PortfolioTerminal.module.css';
+import styles from '../styles/PortfolioTerminal.module.css';
 
 interface CyberLogisticsProps {
   onExit: () => void;

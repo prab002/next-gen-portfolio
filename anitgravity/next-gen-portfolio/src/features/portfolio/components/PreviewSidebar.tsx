@@ -1,8 +1,9 @@
 "use client";
 
 import React from 'react';
-import { Project } from './types';
-import styles from './PortfolioTerminal.module.css';
+import styles from '../styles/PortfolioTerminal.module.css';
+import { Project } from '../types/types';
+import { ProjectCard } from './ProjectCard';
 
 interface PreviewSidebarProps {
   isOpen: boolean;

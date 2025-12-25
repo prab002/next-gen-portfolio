@@ -15,8 +15,8 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
-import { initialNodes, initialEdges } from './data/skills-graph';
-import styles from './PortfolioTerminal.module.css'; // Re-use or separate? Let's keep it inline for now or create new
+import { initialNodes, initialEdges } from '../data/skills-graph';
+import styles from '../styles/PortfolioTerminal.module.css'; // Re-use or separate? Let's keep it inline for now or create new
 
 interface TechGraphProps {
   onNodeSelect?: (tag: string) => void;

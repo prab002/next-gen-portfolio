@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
-import styles from '../PortfolioTerminal.module.css';
+import styles from '../styles/PortfolioTerminal.module.css';
 
 interface GridRunnerProps {
   onExit: () => void;

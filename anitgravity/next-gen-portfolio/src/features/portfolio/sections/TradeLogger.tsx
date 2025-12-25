@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import styles from './PortfolioTerminal.module.css';
-import { parseCSV, calculatePortfolioStats, loadCSVFromFile, PortfolioStats } from './utils/csvParser';
+import styles from '../styles/PortfolioTerminal.module.css';
+import { parseCSV, calculatePortfolioStats, loadCSVFromFile, PortfolioStats } from '../utils/csvParser';
 
 interface Trade {
     id: string;

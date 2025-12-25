@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import styles from './PortfolioTerminal.module.css';
+import styles from '../styles/PortfolioTerminal.module.css';
 
 interface Task {
   id: string;

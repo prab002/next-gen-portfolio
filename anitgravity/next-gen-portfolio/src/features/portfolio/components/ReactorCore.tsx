@@ -1,6 +1,6 @@
 import React from 'react';
-import { ContributionYear, LatestActivity } from './services/github';
-import styles from './PortfolioTerminal.module.css';
+import { ContributionYear, LatestActivity } from '../services/github';
+import styles from '../styles/PortfolioTerminal.module.css';
 
 interface ReactorCoreProps {
   graphData: ContributionYear | null;
