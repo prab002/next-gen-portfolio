@@ -15,6 +15,7 @@ import { BlogSection } from './BlogSection';
 import { QueueSystem } from './QueueSystem';
 import { TradeLogger } from './TradeLogger';
 import { QRGenerator } from './QRGenerator';
+import { SpeedTyper } from './SpeedTyper';
 import { getContributionGraph, getLatestActivity, getMockGraph } from './services/github';
 // ... styles ...
 
@@ -58,7 +59,7 @@ const AIResponse = ({ query }: { query: string }) => {
   );
 };
 
-type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs' | 'kanban' | 'tree' | 'game' | 'queue' | 'tradel' | 'qr';
+type ViewMode = 'portfolio' | 'whoami' | 'updates' | 'blogs' | 'kanban' | 'tree' | 'game' | 'queue' | 'tradel' | 'qr' | 'type';
 
 export const PortfolioTerminal = () => {
   const [history, setHistory] = useState<CommandOutput[]>([]);
@@ -99,6 +100,7 @@ export const PortfolioTerminal = () => {
   - queue           : Launch Cyber-Triage Queue System
   - tradel          : Launch Trade Logger & Analytics
   - qr              : Launch Quantum Response Encoder
+  - type            : Launch Speed Link Protocol
   - ai <query>      : Ask AI Assistant (e.g., 'ai skills', 'ai background')
   - help            : Show this help message
   - clear           : Clear terminal history
@@ -137,6 +139,9 @@ export const PortfolioTerminal = () => {
     } else if (cleanCmdLower === 'qr') {
        setCurrentView('qr');
        response = <div className={styles.response}>Activating Quantum Response Encoder...</div>;
+    } else if (cleanCmdLower === 'type' || cleanCmdLower === 'speed') {
+       setCurrentView('type');
+       response = <div className={styles.response}>Initializing Speed Link Protocol...</div>;
     } else if (cleanCmdLower === 'ls') {
       response = (
         <div className={styles.projectGrid}>
@@ -311,6 +316,7 @@ export const PortfolioTerminal = () => {
                 <li><span className={styles.highlight}>ai</span> - Ask AI assistant</li>
                 <li><span className={styles.highlight}>whoami</span> - About me</li>
                 <li><span className={styles.highlight}>qr</span> - Quantum Encoder</li>
+                <li><span className={styles.highlight}>type</span> - Speed Link Protocol</li>
                 <li><span className={styles.highlight}>help</span> - Show full help menu</li>
               </ul>
             </div>
@@ -343,7 +349,9 @@ export const PortfolioTerminal = () => {
       case 'tradel':
          return <TradeLogger />;
       case 'qr':
-         return <QRGenerator />;
+          return <QRGenerator />;
+      case 'type':
+          return <SpeedTyper />;
       default:
         return null;
     }
@@ -415,6 +423,12 @@ export const PortfolioTerminal = () => {
                 onClick={() => setCurrentView('qr')}
               >
                 QR
+              </span>
+              <span 
+                className={`${styles.navPill} ${currentView === 'type' ? styles.active : ''}`}
+                onClick={() => setCurrentView('type')}
+              >
+                Type
               </span>
             </div>
           </div>
