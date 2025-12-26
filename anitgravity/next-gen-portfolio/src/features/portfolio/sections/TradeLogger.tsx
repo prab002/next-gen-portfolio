@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import styles from '../styles/PortfolioTerminal.module.css';
 import { parseCSV, calculatePortfolioStats, loadCSVFromFile, PortfolioStats } from '../utils/csvParser';
+import { CryptoChart } from '../components/CryptoChart';
 
 interface Trade {
     id: string;
@@ -19,12 +20,23 @@ interface Trade {
     dateStr: string;
 }
 
-type Tab = 'DASHBOARD' | 'JOURNAL' | 'ANALYTICS';
+type Tab = 'DASHBOARD' | 'JOURNAL' | 'ANALYTICS' | 'MARKET';
 
 const USD_TO_INR = 85; // Fixed conversion rate
 
+const AVAILABLE_COINS = [
+    'BTC/USD', 'ETH/USD', 'SOL/USD', 'DOGE/USD', 'XRP/USD', 'ADA/USD', 'AVAX/USD',
+    'DOT/USD', 'MATIC/USD', 'SHIB/USD', 'LTC/USD', 'TRX/USD', 'UNI/USD', 'ATOM/USD',
+    'LINK/USD', 'XLM/USD', 'BCH/USD', 'ALGO/USD', 'FIL/USD', 'ICP/USD', 'VET/USD',
+    'NEAR/USD', 'AAVE/USD', 'QNT/USD', 'GRT/USD', 'SNX/USD', 'SAND/USD', 'MANA/USD'
+];
+
 export const TradeLogger = () => {
     const [activeTab, setActiveTab] = useState<Tab>('DASHBOARD');
+    const [selectedSymbol, setSelectedSymbol] = useState<string>('BTC/USD');
+    const [symbolInput, setSymbolInput] = useState<string>('');
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
     const [initialCapital, setInitialCapital] = useState<number>(10000);
     const [trades, setTrades] = useState<Trade[]>([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -562,6 +574,9 @@ export const TradeLogger = () => {
                     <div className={`${styles.navItem} ${activeTab === 'ANALYTICS' ? styles.navActive : ''}`} onClick={() => setActiveTab('ANALYTICS')}>
                         ANALYTICS
                     </div>
+                    <div className={`${styles.navItem} ${activeTab === 'MARKET' ? styles.navActive : ''}`} onClick={() => setActiveTab('MARKET')}>
+                        MARKET
+                    </div>
                 </div>
                 <div className={styles.sidebarFooter}>
                     <div className={styles.accountStatus}>
@@ -802,109 +817,42 @@ export const TradeLogger = () => {
                                                     border: `1px solid ${stat.pnl >= 0 ? 'rgba(0, 227, 150, 0.3)' : 'rgba(255, 69, 96, 0.3)'}`
                                                 }}>
                                                     <div>
-                                                        <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>{stat.symbol}</div>
-                                                        <div style={{ fontSize: '0.75rem', color: '#888' }}>
-                                                            {stat.trades} trades • {stat.winRate.toFixed(0)}% WR
-                                                        </div>
+                                                        <div style={{ fontWeight: 'bold' }}>{stat.symbol}</div>
+                                                        <div style={{ fontSize: '0.8rem', color: '#666' }}>{stat.trades} Trades</div>
                                                     </div>
-                                                    <div style={{
-                                                        fontSize: '1.1rem',
-                                                        fontWeight: 'bold',
-                                                        color: stat.pnl >= 0 ? '#00E396' : '#FF4560',
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        alignItems: 'flex-end'
-                                                    }}>
-                                                        <span>{stat.pnl >= 0 ? '+' : ''}${stat.pnl.toFixed(2)}</span>
-                                                        <span style={{ fontSize: '0.75rem', color: '#888' }}>
-                                                            ₹{(stat.pnl * USD_TO_INR).toFixed(2)}
-                                                        </span>
+                                                    <div style={{ textAlign: 'right' }}>
+                                                        <div style={{ color: stat.pnl >= 0 ? '#00E396' : '#FF4560' }}>
+                                                            {stat.pnl >= 0 ? '+' : ''}{formatCurrency(stat.pnl, false)}
+                                                        </div>
+                                                        <div style={{ fontSize: '0.75rem', color: '#888' }}>{stat.winRate.toFixed(1)}% WR</div>
                                                     </div>
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
 
-                                    {/* FEATURE 3: BEST/WORST DAYS */}
+                                    {/* FEATURE 3: BEST & WORST DAYS */}
                                     <div className={styles.heatmapCard}>
-                                        <div className={styles.cardHeader}>BEST & WORST DAYS</div>
-                                        <div style={{ padding: '1rem' }}>
-                                            <div style={{ marginBottom: '1rem' }}>
-                                                <div style={{ fontSize: '0.8rem', color: '#00E396', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                                                    🏆 TOP 5 WINNING DAYS
-                                                </div>
-                                                {analytics.bestDays.map(day => (
-                                                    <div key={day.date} style={{
-                                                        display: 'flex',
-                                                        justifyContent: 'space-between',
-                                                        padding: '0.5rem',
-                                                        marginBottom: '0.25rem',
-                                                        background: 'rgba(0, 227, 150, 0.05)',
-                                                        borderRadius: '4px'
-                                                    }}>
-                                                        <span style={{ fontSize: '0.85rem' }}>{new Date(day.date).toLocaleDateString()}</span>
-                                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                                                            <span style={{ color: '#00E396', fontWeight: 'bold' }}>+${day.pnl.toFixed(2)}</span>
-                                                            <span style={{ fontSize: '0.7rem', color: '#888' }}>₹{(day.pnl * USD_TO_INR).toFixed(2)}</span>
-                                                        </div>
+                                        <div className={styles.cardHeader}>EXTREME DAYS</div>
+                                        <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                            <div>
+                                                <div style={{ fontSize: '0.8rem', color: '#888', marginBottom: '0.5rem' }}>BEST DAY</div>
+                                                {analytics.bestDays[0] ? (
+                                                    <div className={styles.heatCell} style={{ background: 'rgba(0, 227, 150, 0.1)', border: '1px solid rgba(0, 227, 150, 0.3)', padding: '1rem', borderRadius: '8px' }}>
+                                                        <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#00E396' }}>+${analytics.bestDays[0].pnl.toFixed(2)}</div>
+                                                        <div style={{ fontSize: '0.8rem', color: '#888' }}>{new Date(analytics.bestDays[0].date).toDateString()}</div>
                                                     </div>
-                                                ))}
+                                                ) : <div style={{ color: '#666' }}>No Data</div>}
                                             </div>
                                             <div>
-                                                <div style={{ fontSize: '0.8rem', color: '#FF4560', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                                                    ⚠️ TOP 5 LOSING DAYS
-                                                </div>
-                                                {analytics.worstDays.map(day => (
-                                                    <div key={day.date} style={{
-                                                        display: 'flex',
-                                                        justifyContent: 'space-between',
-                                                        padding: '0.5rem',
-                                                        marginBottom: '0.25rem',
-                                                        background: 'rgba(255, 69, 96, 0.05)',
-                                                        borderRadius: '4px'
-                                                    }}>
-                                                        <span style={{ fontSize: '0.85rem' }}>{new Date(day.date).toLocaleDateString()}</span>
-                                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                                                            <span style={{ color: '#FF4560', fontWeight: 'bold' }}>${day.pnl.toFixed(2)}</span>
-                                                            <span style={{ fontSize: '0.7rem', color: '#888' }}>₹{(day.pnl * USD_TO_INR).toFixed(2)}</span>
-                                                        </div>
+                                                <div style={{ fontSize: '0.8rem', color: '#888', marginBottom: '0.5rem' }}>WORST DAY</div>
+                                                {analytics.worstDays[0] ? (
+                                                    <div className={styles.heatCell} style={{ background: 'rgba(255, 69, 96, 0.1)', border: '1px solid rgba(255, 69, 96, 0.3)', padding: '1rem', borderRadius: '8px' }}>
+                                                        <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#FF4560' }}>${analytics.worstDays[0].pnl.toFixed(2)}</div>
+                                                        <div style={{ fontSize: '0.8rem', color: '#888' }}>{new Date(analytics.worstDays[0].date).toDateString()}</div>
                                                     </div>
-                                                ))}
+                                                ) : <div style={{ color: '#666' }}>No Data</div>}
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* FEATURE 5: ADVANCED STATISTICS */}
-                                <div className={styles.kpiStrip} style={{ marginTop: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
-                                    <div className={styles.proKpi}>
-                                        <div className={styles.proLabel}>AVG WIN</div>
-                                        <div className={`${styles.proValue} ${styles.textGreen}`}>
-                                            {formatCurrency(analytics.avgWin)}
-                                        </div>
-                                    </div>
-                                    <div className={styles.proKpi}>
-                                        <div className={styles.proLabel}>AVG LOSS</div>
-                                        <div className={`${styles.proValue} ${styles.textRed}`}>
-                                            {formatCurrency(analytics.avgLoss)}
-                                        </div>
-                                    </div>
-                                    <div className={styles.proKpi}>
-                                        <div className={styles.proLabel}>LARGEST WIN</div>
-                                        <div className={`${styles.proValue} ${styles.textGreen}`}>
-                                            {formatCurrency(analytics.largestWin)}
-                                        </div>
-                                    </div>
-                                    <div className={styles.proKpi}>
-                                        <div className={styles.proLabel}>LARGEST LOSS</div>
-                                        <div className={`${styles.proValue} ${styles.textRed}`}>
-                                            {formatCurrency(analytics.largestLoss)}
-                                        </div>
-                                    </div>
-                                    <div className={styles.proKpi}>
-                                        <div className={styles.proLabel}>EXPECTANCY</div>
-                                        <div className={`${styles.proValue} ${analytics.expectancy >= 0 ? styles.textGreen : styles.textRed}`}>
-                                            {formatCurrency(analytics.expectancy)}
                                         </div>
                                     </div>
                                 </div>
@@ -912,6 +860,117 @@ export const TradeLogger = () => {
                         )}
                     </div>
                 )}
+
+                {/* MARKET VIEW */}
+                {activeTab === 'MARKET' && (
+                    <div style={{ padding: '0 1rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', padding: '1rem 0', position: 'relative' }}>
+                            <form 
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    if (symbolInput.trim()) {
+                                        setSelectedSymbol(symbolInput.toUpperCase());
+                                        setSymbolInput('');
+                                        setShowSuggestions(false);
+                                    }
+                                }}
+                                style={{ display: 'flex', gap: '0.5rem', flex: 1 }}
+                            >
+                                <div style={{ position: 'relative', flex: 1 }}>
+                                    <input
+                                        type="text"
+                                        value={symbolInput}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            setSymbolInput(val);
+                                            if (val) {
+                                                const filtered = AVAILABLE_COINS.filter(c => c.toLowerCase().includes(val.toLowerCase()));
+                                                setSuggestions(filtered);
+                                                setShowSuggestions(true);
+                                            } else {
+                                                setShowSuggestions(false);
+                                            }
+                                        }}
+                                        onFocus={() => {
+                                            if (symbolInput) setShowSuggestions(true);
+                                        }}
+                                        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                                        placeholder="Search Coin (e.g. ADA/USD)"
+                                        style={{
+                                            width: '100%',
+                                            background: 'rgba(255, 255, 255, 0.05)',
+                                            border: '1px solid #333',
+                                            color: '#fff',
+                                            padding: '0.5rem 1rem',
+                                            borderRadius: '6px',
+                                            outline: 'none'
+                                        }}
+                                    />
+                                    {showSuggestions && suggestions.length > 0 && (
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: '100%',
+                                            left: 0,
+                                            right: 0,
+                                            background: '#1A1A1D',
+                                            border: '1px solid #333',
+                                            borderRadius: '6px',
+                                            marginTop: '4px',
+                                            zIndex: 10,
+                                            maxHeight: '200px',
+                                            overflowY: 'auto',
+                                            boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+                                        }}>
+                                            {suggestions.map(s => (
+                                                <div 
+                                                    key={s}
+                                                    onClick={() => {
+                                                        setSelectedSymbol(s);
+                                                        setSymbolInput('');
+                                                        setShowSuggestions(false);
+                                                    }}
+                                                    style={{
+                                                        padding: '0.5rem 1rem',
+                                                        cursor: 'pointer',
+                                                        color: '#ccc',
+                                                        borderBottom: '1px solid #222'
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                                                        e.currentTarget.style.color = '#fff';
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.currentTarget.style.background = 'transparent';
+                                                        e.currentTarget.style.color = '#ccc';
+                                                    }}
+                                                >
+                                                    {s}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                                <button
+                                    type="submit"
+                                    style={{
+                                        background: '#00E396',
+                                        color: '#000',
+                                        border: 'none',
+                                        padding: '0.5rem 1.5rem',
+                                        borderRadius: '6px',
+                                        cursor: 'pointer',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.8rem'
+                                    }}
+                                >
+                                    GO
+                                </button>
+                            </form>
+                        </div>
+                        <CryptoChart height={550} symbol={selectedSymbol} />
+                    </div>
+                )}
+
 
                 {/* ANALYTICS VIEW */}
                 {activeTab === 'ANALYTICS' && isCSVMode && (
